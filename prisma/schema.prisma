@@ -1,0 +1,75 @@
+// Definir el datasource para MongoDB
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Definir el generador para Prisma Client
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Modelo Usuario
+model Usuario {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  nombre       String
+  correo       String     @unique
+  password     String
+  tipo         TipoUsuario
+  favoritos    Favoritos[] // Relación explícita con modelo Favoritos
+  listaDeseos  ListaDeseos[] // Relación explícita con modelo ListaDeseos
+  comentarios  Comentario[]
+}
+
+// Modelo Libro
+model Libro {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  titulo         String
+  autor          String
+  genero         String
+  precio         Float
+  stock          Int
+  descripcion    String
+  valoracion     Float?
+  comentarios    Comentario[]
+  usuariosFav    Favoritos[] // Relación explícita con modelo Favoritos
+  usuariosDeseos ListaDeseos[] // Relación explícita con modelo ListaDeseos
+}
+
+// Modelo Comentario
+model Comentario {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  contenido String
+  valoracion Int
+  fecha     DateTime @default(now())
+  
+  // Relaciones
+  usuarioId String   @db.ObjectId
+  libroId   String   @db.ObjectId
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  libro     Libro    @relation(fields: [libroId], references: [id])
+}
+
+// Modelo Favoritos para la relación Usuario - Libro (Favoritos)
+model Favoritos {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId String   @db.ObjectId
+  libro     Libro    @relation(fields: [libroId], references: [id])
+  libroId   String   @db.ObjectId
+}
+
+// Modelo ListaDeseos para la relación Usuario - Libro (Lista de Deseos)
+model ListaDeseos {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId String   @db.ObjectId
+  libro     Libro    @relation(fields: [libroId], references: [id])
+  libroId   String   @db.ObjectId
+}
+
+// Enum para el tipo de usuario
+enum TipoUsuario {
+  ADMIN
+  USUARIO
+}
