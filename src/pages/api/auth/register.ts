@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import type { NextApiRequest, NextApiResponse } from "next";
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 // Inicializar Prisma Client
 const prisma = new PrismaClient();
@@ -32,6 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     // Crear un nuevo usuario en la base de datos
+    
     const nuevoUsuario = await prisma.usuario.create({
       data: {
         nombre,
@@ -40,9 +42,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         tipo: "USUARIO", // Puedes cambiar el tipo si es necesario
       },
     });
+    const token = jwt.sign({ id: nuevoUsuario.id } as JwtPayload, process.env.JWT_SECRET as string, { expiresIn: '8h' });
+
 
     // Devolver el nuevo usuario en la respuesta
-    res.status(201).json({ nuevoUsuario });
+    res.status(201).json({ token,nuevoUsuario });
   } catch (error) {
     // Manejo de errores
     res.status(500).json({ message: 'Error al crear el usuario', error });
