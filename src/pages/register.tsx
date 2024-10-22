@@ -6,17 +6,25 @@ const RegisterPage = () => {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setError(''); // Reset error message
+    setMessage(''); // Reset message
+    setIsSuccess(false); // Reset success state
+
     try {
       await axios.post('/api/auth/register', { nombre, correo, password });
-      router.push('/login');
+      setIsSuccess(true);
+      setMessage('Registro exitoso. Redirigiendo a la página de login...');
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000); // Redirigir después de 2 segundos
     } catch (error) {
-      setError('Error al registrar el usuario. Por favor, inténtalo de nuevo.');
+      setIsSuccess(false);
+      setMessage('Error al registrar el usuario. Por favor, inténtalo de nuevo.');
     }
   };
 
@@ -25,9 +33,14 @@ const RegisterPage = () => {
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-100">Crear cuenta</h1>
 
-        {error && (
-          <div className="bg-red-100 text-red-600 py-2 px-4 rounded mb-4 text-center">
-            {error}
+        {/* Mostrar mensaje de éxito o error */}
+        {message && (
+          <div
+            className={`py-2 px-4 rounded mb-4 text-center ${
+              isSuccess ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+            }`}
+          >
+            {message}
           </div>
         )}
 

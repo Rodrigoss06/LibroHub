@@ -25,14 +25,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (!token) return res.status(401).json({ message: 'Acceso no autorizado' });
 
   try {
-    // Verificar el token JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
     // Buscar al usuario en la base de datos por el id del token
     const usuario = await prisma.usuario.findUnique({ where: { id: decoded.id } });
 
     // Verificar si el usuario es un administrador
-    if (!usuario || usuario.tipo !== 'ADMIN') {
+    if (!usuario || usuario.tipo !== 'USUARIO') {
       return res.status(403).json({ message: 'Permisos insuficientes' });
     }
 
