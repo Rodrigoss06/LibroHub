@@ -10,6 +10,7 @@ const prisma = new PrismaClient();
 interface Response {
   message?: string;
   error?: any;
+  token?:string
   nuevoUsuario?: any;
 }
 

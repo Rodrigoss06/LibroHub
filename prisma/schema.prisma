@@ -31,6 +31,7 @@ model Libro {
   stock          Int
   descripcion    String
   valoracion     Float?
+  urlPhoto    String?  // Campo opcional para la URL de la imagen del libro
   comentarios    Comentario[]
   usuariosFav    Favoritos[] // Relación explícita con modelo Favoritos
   usuariosDeseos ListaDeseos[] // Relación explícita con modelo ListaDeseos

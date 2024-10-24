@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
   } else if (req.method === 'POST') {
     // Extraer los datos del cuerpo de la solicitud
-    const { titulo, autor, genero, precio, descripcion, stock } = req.body;
+    const { titulo, autor, genero, precio, descripcion, stock,urlPhoto } = req.body;
 
     // Validar que todos los campos obligatorios estén presentes
     if (!titulo || !autor || !genero || !precio || !descripcion || typeof stock !== 'number') {
@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
       // Crear un nuevo libro en la base de datos
       const libro = await prisma.libro.create({
-        data: { titulo, autor, genero, precio, descripcion, stock },
+        data: { titulo, autor, genero, precio, descripcion, stock,urlPhoto },
       });
       res.status(201).json({ libro });
     } catch (error) {

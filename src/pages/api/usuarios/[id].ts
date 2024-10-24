@@ -27,20 +27,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
-    // Buscar al usuario en la base de datos por el id del token
-    const usuario = await prisma.usuario.findUnique({ where: { id: decoded.id } });
+    // Buscar al usuario autenticado en la base de datos por el id del token
+    const usuarioAutenticado = await prisma.usuario.findUnique({ where: { id: decoded.id } });
 
-    // Verificar si el usuario es un administrador
-    if (!usuario || usuario.tipo !== 'USUARIO') {
+    // Verificar si el usuario tiene permisos
+    if (!usuarioAutenticado || usuarioAutenticado.tipo !== 'USUARIO') {
       return res.status(403).json({ message: 'Permisos insuficientes' });
     }
 
     // Manejar los diferentes métodos HTTP
     if (req.method === 'GET') {
-      // Obtener un usuario por su ID
-      const usuario = await prisma.usuario.findUnique({ where: { id: String(id) } });
+      // Obtener un usuario por su ID e incluir Favoritos y Lista de Deseos
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: String(id) },
+        include: {
+          favoritos: {
+            include: {
+              libro: true, // Incluir detalles del libro en favoritos
+            },
+          },
+          listaDeseos: {
+            include: {
+              libro: true, // Incluir detalles del libro en lista de deseos
+            },
+          },
+        },
+      });
+
       if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado' });
-      res.status(200).json({usuario:usuario});
+      res.status(200).json({ usuario });
     } else if (req.method === 'PUT') {
       // Actualizar los datos de un usuario
       const { nombre, correo } = req.body;
@@ -48,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         where: { id: String(id) },
         data: { nombre, correo },
       });
-      res.status(200).json({usuario:usuarioActualizado});
+      res.status(200).json({ usuario: usuarioActualizado });
     } else if (req.method === 'DELETE') {
       // Eliminar un usuario
       await prisma.usuario.delete({ where: { id: String(id) } });

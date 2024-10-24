@@ -16,12 +16,13 @@ const RegisterPage = () => {
     setIsSuccess(false); // Reset success state
 
     try {
-      await axios.post('/api/auth/register', { nombre, correo, password });
+      const response = await axios.post('/api/auth/register', { nombre, correo, password });
       setIsSuccess(true);
+      localStorage.setItem('token', response.data.token);
       setMessage('Registro exitoso. Redirigiendo a la página de login...');
       setTimeout(() => {
         router.push('/login');
-      }, 2000); // Redirigir después de 2 segundos
+      }, 2000); 
     } catch (error) {
       setIsSuccess(false);
       setMessage('Error al registrar el usuario. Por favor, inténtalo de nuevo.');
