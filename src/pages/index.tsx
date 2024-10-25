@@ -68,48 +68,47 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navbar */}
       <Navbar />
 
       <div className="container mx-auto px-4 py-10">
-        <h1 className="text-4xl font-bold text-center mb-8">Lista de Libros</h1>
+        <h1 className="text-5xl font-serif text-center mb-8 text-tertiary">
+          Lista de Libros
+        </h1>
 
         {error ? (
-          <div className="text-center text-red-500">
-            <p>
-              Error al cargar los libros. Por favor, intenta nuevamente más
-              tarde.
-            </p>
+          <div className="text-center text-error">
+            <p>Error al cargar los libros. Por favor, intenta nuevamente más tarde.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {libros.map((libro: any) => (
               <div
                 key={libro.id}
-                className="bg-gray-800 rounded-lg shadow-md p-6"
+                className="bg-secondary border-retro border rounded-lg shadow-retro p-6"
               >
                 <img
                   src={libro.urlPhoto}
                   alt={libro.titulo}
-                  className="w-full h-[500px] object-cover rounded-lg mb-4" // Cambié la altura de la imagen a 72 para mostrar más de la portada
+                  className="w-full h-[500px] object-cover rounded-none mb-4"
                 />
-                <h2 className="text-2xl font-semibold">{libro.titulo}</h2>
-                <p className="text-gray-400 mt-2">{libro.descripcion}</p>
-                <p className="text-white mt-4 font-bold">
+                <h2 className="text-2xl font-semibold text-background">{libro.titulo}</h2>
+                <p className="text-foreground mt-2">{libro.descripcion}</p>
+                <p className="text-primary mt-4 font-bold">
                   Precio: ${libro.precio}
                 </p>
 
                 <div className="flex justify-between mt-4">
                   <a
                     href={`/libros/${libro.id}`}
-                    className="text-blue-400 hover:text-blue-600 font-semibold"
+                    className="text-highlight hover:text-highlighthover font-semibold"
                   >
                     Ver detalles
                   </a>
                   <button
                     onClick={() => agregarAlCarrito(libro.id)}
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                    className="bg-highlight text-white px-4 py-2 rounded-lg hover:bg-highlighthover"
                   >
                     Agregar al carrito
                   </button>

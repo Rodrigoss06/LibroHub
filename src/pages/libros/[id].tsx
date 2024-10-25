@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Navbar from '@/components/Navbar'; // Asegúrate de que la ruta sea correcta
+import Navbar from '@/components/Navbar';
 
 const LibroDetallesPage = () => {
   const router = useRouter();
@@ -10,7 +10,7 @@ const LibroDetallesPage = () => {
   const [librosRelacionados, setLibrosRelacionados] = useState<any[]>([]);
   const [comentarios, setComentarios] = useState<any[]>([]);
   const [nuevoComentario, setNuevoComentario] = useState<string>('');
-  const [valoracion, setValoracion] = useState<number>(5); // Valoración predeterminada de 5
+  const [valoracion, setValoracion] = useState<number>(5);
   const [usuario, setUsuario] = useState<any>(null);
 
   useEffect(() => {
@@ -70,7 +70,6 @@ const LibroDetallesPage = () => {
 
   const agregarComentario = async () => {
     if (nuevoComentario.trim() === '' || !valoracion || !usuario) return;
-
     try {
       await axios.post(
         '/api/comentarios',
@@ -83,9 +82,8 @@ const LibroDetallesPage = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         }
       );
-      setNuevoComentario(''); // Limpiar el input
-      setValoracion(5); // Resetear la valoración
-      // Volver a cargar los comentarios
+      setNuevoComentario('');
+      setValoracion(5);
       const response = await axios.get(`/api/comentarios/${id}`);
       setComentarios(response.data.comentarios);
     } catch (error) {
@@ -130,25 +128,25 @@ const LibroDetallesPage = () => {
   if (!libro) return <div className="flex justify-center items-center h-screen">Cargando...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navbar */}
       <Navbar />
 
       {/* Contenido principal */}
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl w-full bg-gray-800 rounded-lg shadow-lg p-8 mx-auto">
+        <div className="max-w-4xl w-full bg-secondary rounded-lg shadow-retro p-8 mx-auto">
           <div className="flex flex-col md:flex-row gap-6">
             {/* Imagen del libro */}
             <div className="w-full md:w-1/3">
               <img
                 src={libro.urlPhoto || 'https://via.placeholder.com/300'}
                 alt={libro.titulo}
-                className="w-full h-auto object-cover rounded-lg"
+                className="w-full h-auto object-cover rounded-none border border-retro"
               />
             </div>
             {/* Detalles del libro */}
             <div className="w-full md:w-2/3 flex flex-col justify-between">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">{libro.titulo}</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-background mb-4">{libro.titulo}</h1>
               <p className="text-lg mb-4">
                 <strong>Autor:</strong> {libro.autor}
               </p>
@@ -162,13 +160,13 @@ const LibroDetallesPage = () => {
                 <div className="flex space-x-4 mt-6">
                   <button
                     onClick={agregarAFavoritos}
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                    className="bg-highlight text-white px-4 py-2 rounded-lg hover:bg-accent"
                   >
                     Agregar a Favoritos
                   </button>
                   <button
                     onClick={agregarAListaDeseos}
-                    className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600"
+                    className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-highlight"
                   >
                     Agregar a Lista de Deseos
                   </button>
@@ -177,7 +175,7 @@ const LibroDetallesPage = () => {
 
               <button
                 onClick={() => router.push('/libros')}
-                className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
+                className="mt-6 w-full bg-primary hover:bg-tertiary text-white font-semibold py-3 rounded-lg transition duration-300"
               >
                 Volver a la lista de libros
               </button>
@@ -187,23 +185,23 @@ const LibroDetallesPage = () => {
 
         {/* Lista de libros relacionados con scroll horizontal */}
         <div className="mt-10">
-          <h2 className="text-2xl font-bold mb-4">Libros relacionados</h2>
+          <h2 className="text-2xl font-bold text-tertiary mb-4">Libros relacionados</h2>
           <div className="flex space-x-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-700">
             {librosRelacionados.map((libroRelacionado) => (
               <div
                 key={libroRelacionado.id}
-                className="min-w-[200px] max-w-[200px] bg-gray-800 rounded-lg shadow-md p-4"
+                className="min-w-[200px] max-w-[200px] bg-secondary rounded-lg shadow-retro p-4"
               >
                 <img
                   src={libroRelacionado.urlPhoto || 'https://via.placeholder.com/150'}
                   alt={libroRelacionado.titulo}
-                  className="w-full h-40 object-cover rounded-lg mb-2"
+                  className="w-full h-40 object-cover rounded-none mb-2 border border-retro"
                 />
-                <h3 className="text-lg font-semibold">{libroRelacionado.titulo}</h3>
-                <p className="text-sm text-gray-400">{libroRelacionado.autor}</p>
+                <h3 className="text-lg font-semibold text-background">{libroRelacionado.titulo}</h3>
+                <p className="text-sm text-foreground">{libroRelacionado.autor}</p>
                 <a
                   href={`/libros/${libroRelacionado.id}`}
-                  className="text-blue-400 hover:text-blue-500 mt-2 block"
+                  className="text-highlight hover:text-accent mt-2 block"
                 >
                   Ver detalles
                 </a>
@@ -214,16 +212,16 @@ const LibroDetallesPage = () => {
 
         {/* Sección de comentarios */}
         <div className="mt-10">
-          <h2 className="text-2xl font-bold mb-4">Comentarios</h2>
+          <h2 className="text-2xl font-bold text-tertiary mb-4">Comentarios</h2>
           <div className="space-y-4">
             {comentarios.map((comentario) => (
-              <div key={comentario.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
+              <div key={comentario.id} className="bg-secondary p-4 rounded-lg shadow-retro">
                 <p>
                   <strong>{comentario.usuario.nombre}</strong> -{' '}
                   <span className="text-yellow-400">{comentario.valoracion}/5</span>
                 </p>
                 <p>{comentario.contenido}</p>
-                <span className="text-sm text-gray-400">{comentario.fecha}</span>
+                <span className="text-sm text-foreground">{comentario.fecha}</span>
               </div>
             ))}
           </div>
@@ -235,11 +233,11 @@ const LibroDetallesPage = () => {
                 value={nuevoComentario}
                 onChange={(e) => setNuevoComentario(e.target.value)}
                 rows={4}
-                className="w-full bg-gray-700 text-gray-300 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-secondary text-foreground p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                 placeholder="Escribe tu comentario..."
               ></textarea>
               <div className="mt-4">
-                <label htmlFor="valoracion" className="block mb-2">
+                <label htmlFor="valoracion" className="text-secondary block mb-2">
                   Valoración:
                 </label>
                 <input
@@ -249,12 +247,12 @@ const LibroDetallesPage = () => {
                   max="5"
                   value={valoracion}
                   onChange={(e) => setValoracion(Number(e.target.value))}
-                  className="bg-gray-700 text-gray-300 p-2 rounded-lg"
+                  className="bg-secondary text-foreground p-2 rounded-lg"
                 />
               </div>
               <button
                 onClick={agregarComentario}
-                className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
+                className="mt-4 bg-primary hover:bg-tertiary text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
               >
                 Enviar comentario
               </button>
