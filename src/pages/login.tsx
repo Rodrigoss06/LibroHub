@@ -55,7 +55,7 @@ const LoginPage = () => {
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
               required
-              className="w-full mt-1 p-3 bg-background text-foreground border border-primary rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+              className="w-full mt-1 p-3 bg-background text-tertiary border border-primary rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
           </div>
           <div>
@@ -68,7 +68,7 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full mt-1 p-3 bg-background text-foreground border border-primary rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+              className="w-full mt-1 p-3 bg-background text-tertiary border border-primary rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
           </div>
           <button
