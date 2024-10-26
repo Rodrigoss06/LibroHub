@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import ModalUsuario from '@/components/ModalUsuario';
+import Navbar from '@/components/Navbar';
 
 const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState<any[]>([]);
@@ -22,7 +23,7 @@ const AdminUsuarios = () => {
 
           if (response.data.usuario.tipo === 'ADMIN') {
             setIsAdmin(true);
-            cargarUsuarios();
+            cargarUsuarios(token);
           } else {
             setIsAdmin(false);
           }
@@ -41,9 +42,11 @@ const AdminUsuarios = () => {
     verificarUsuario();
   }, []);
 
-  const cargarUsuarios = async () => {
+  const cargarUsuarios = async (token: string) => {
     try {
-      const response = await axios.get('/api/usuarios');
+      const response = await axios.get('/api/usuarios', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setUsuarios(response.data.usuarios);
     } catch (error) {
       console.error('Error al cargar los usuarios:', error);
@@ -99,18 +102,20 @@ const AdminUsuarios = () => {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center">Gestión de Usuarios</h1>
+      <Navbar />
 
-        {/* Tabla de usuarios */}
-        <div className="grid grid-cols-12 gap-4 text-center">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8 text-center text-white">Gestión de Usuarios</h1>
+
+        {/* Tabla de usuarios con borde y texto blanco */}
+        <div className="grid grid-cols-12 gap-4 text-center border border-gray-700 rounded-lg p-4 text-white">
           <div className="col-span-4 font-semibold">Nombre</div>
           <div className="col-span-4 font-semibold">Correo</div>
           <div className="col-span-2 font-semibold">Tipo</div>
           <div className="col-span-2 font-semibold">Acciones</div>
 
           {usuarios.map((usuario) => (
-            <div key={usuario.id} className="contents border-b border-gray-700">
+            <div key={usuario.id} className="contents border-t border-gray-700">
               <div className="col-span-4">{usuario.nombre}</div>
               <div className="col-span-4">{usuario.correo}</div>
               <div className="col-span-2">{usuario.tipo}</div>
