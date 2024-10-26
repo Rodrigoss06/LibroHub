@@ -13,6 +13,7 @@ interface Response {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
   if (req.method === 'GET') {
     // Obtener todos los libros
+
     try {
       const libros = await prisma.libro.findMany();
       console.log(libros)

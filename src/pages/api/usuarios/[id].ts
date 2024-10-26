@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const usuarioAutenticado = await prisma.usuario.findUnique({ where: { id: decoded.id } });
 
     // Verificar si el usuario tiene permisos
-    if (!usuarioAutenticado || usuarioAutenticado.tipo !== 'USUARIO') {
+    if (!usuarioAutenticado  ) {
       return res.status(403).json({ message: 'Permisos insuficientes' });
     }
 
